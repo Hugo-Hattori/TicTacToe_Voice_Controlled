@@ -15,7 +15,7 @@ EMPATE = None
 TELA_LARGURA = 500
 TELA_ALTURA = 500
 
-FUNDO = (255, 255, 255) #cor padrão da janela
+COR_FUNDO = (255, 255, 255) #cor padrão da janela
 
 COR_LINHA = (0, 0, 0) #cor das linhas divisórias
 
@@ -39,3 +39,18 @@ IMAGEM_O = pygame.image.load((os.path.join('imgs', 'simbolo-o.png')))
 IMAGEM_BACKGROUND = pygame.transform.scale(IMAGEM_BACKGROUND, (TELA_LARGURA, TELA_ALTURA))
 IMAGEM_X = pygame.transform.scale(IMAGEM_X, (80, 80))
 IMAGEM_O = pygame.transform.scale(IMAGEM_O, (80, 80))
+
+
+def desenhar_tela():
+    tela.blit(IMAGEM_BACKGROUND, (0, 0))
+    pygame.display.update()
+    time.sleep(3)
+    tela.fill(COR_FUNDO)
+
+    #desenhando linhas verticais
+    pygame.draw.line(tela, COR_LINHA, (TELA_LARGURA/3, 0), (TELA_LARGURA/3, TELA_ALTURA), 7)
+    pygame.draw.line(tela, COR_LINHA, (TELA_LARGURA/3 * 2, 0), (TELA_LARGURA/3 * 2, TELA_ALTURA), 7)
+
+    #desenhando linhas horizontais
+    pygame.draw.line(tela, COR_LINHA, (0, TELA_ALTURA/3), (TELA_LARGURA, TELA_ALTURA/3), 7)
+    pygame.draw.line(tela, COR_LINHA, (0, TELA_ALTURA/3 * 2), (TELA_LARGURA, TELA_ALTURA/3 * 2), 7)
