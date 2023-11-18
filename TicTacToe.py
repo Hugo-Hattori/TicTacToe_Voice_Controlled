@@ -6,7 +6,7 @@ import os
 
 
 #variáveis globais
-SIMBOLO_XO = 'x'
+JOGADOR_XO = 'x'
 
 VENCEDOR = None
 
@@ -19,7 +19,7 @@ COR_FUNDO = (255, 255, 255) #cor padrão da janela
 
 COR_LINHA = (0, 0, 0) #cor das linhas divisórias
 
-TABULEIRO = [[None*3], [None*3], [None*3]]
+TABULEIRO = [[None]*3, [None]*3, [None]*3]
 
 #inicializando janela
 pygame.init()
@@ -54,3 +54,21 @@ def desenhar_tela():
     #desenhando linhas horizontais
     pygame.draw.line(tela, COR_LINHA, (0, TELA_ALTURA/3), (TELA_LARGURA, TELA_ALTURA/3), 7)
     pygame.draw.line(tela, COR_LINHA, (0, TELA_ALTURA/3 * 2), (TELA_LARGURA, TELA_ALTURA/3 * 2), 7)
+
+
+def desenhar_status():
+
+    if VENCEDOR == None:
+        mensagem = f'Turno do jogador {JOGADOR_XO.upper()}'
+    else:
+        mensagem = f'Jogador {VENCEDOR} venceu!'
+    if EMPATE:
+        mensagem = 'O jogo empatou.'
+
+    fonte = pygame.font.SysFont('arial', 30)
+    texto = fonte.render(mensagem, 1, COR_FUNDO)
+    retangulo = ((0, 400), (500, 100)) #((left, top), (width, height))
+    tela.fill(COR_LINHA, retangulo)
+    rect_texto = texto.get_rect(center=(TELA_LARGURA/2, 450))
+    tela.blit(texto, rect_texto)
+    pygame.display.update()
