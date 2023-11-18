@@ -42,6 +42,7 @@ IMAGEM_O = pygame.transform.scale(IMAGEM_O, (80, 80))
 
 
 def desenhar_tela():
+
     tela.blit(IMAGEM_BACKGROUND, (0, 0))
     pygame.display.update()
     time.sleep(3)
@@ -57,6 +58,7 @@ def desenhar_tela():
 
 
 def desenhar_status():
+    global VENCEDOR, EMPATE
 
     if VENCEDOR == None:
         mensagem = f'Turno do jogador {JOGADOR_XO.upper()}'
@@ -72,3 +74,49 @@ def desenhar_status():
     rect_texto = texto.get_rect(center=(TELA_LARGURA/2, 450))
     tela.blit(texto, rect_texto)
     pygame.display.update()
+
+
+def checar_vitoria():
+    global TABULEIRO, VENCEDOR, EMPATE
+
+    #checar vitória pelas linhas
+    for linha in range(len(TABULEIRO)):
+        if (TABULEIRO[linha][0] == TABULEIRO[linha][1] == TABULEIRO[linha][2]) and (TABULEIRO[linha][0] is not None):
+            VENCEDOR = TABULEIRO[linha][0] #vai pegar o X ou O e idenficar ele como vencedor
+            pygame.draw.line(tela, (250, 0, 0),
+                             (0, ((linha + 1) * TELA_ALTURA / 3 - TELA_ALTURA / 6)),
+                             (TELA_LARGURA, ((linha + 1 ) * TELA_ALTURA) - TELA_ALTURA / 6),
+                             4)
+
+    #checar vitória pelas colunas
+    for coluna in range(len(TABULEIRO)):
+        if (TABULEIRO[0][coluna] == TABULEIRO[1][coluna] == TABULEIRO[2][coluna]) and (TABULEIRO[0][coluna] is not None):
+            VENCEDOR = TABULEIRO[0][coluna]
+            pygame.draw.line(tela, (250, 0, 0),
+                             (0, ((coluna + 1) * TELA_LARGURA / 3 - TELA_LARGURA / 6)),
+                             (TELA_ALTURA, ((coluna + 1) * TELA_LARGURA) - TELA_LARGURA / 6),
+                             4)
+
+
+    #checar vitória pelas diagonais
+    if (TABULEIRO[0][0] == TABULEIRO[1][1] == TABULEIRO[2][2]) and (TABULEIRO[0][0] is not None):
+        VENCEDOR = TABULEIRO[0][0]
+        pygame.draw.line(tela, (250, 0, 0), (50, 50), (350, 350), 4)
+
+    if (TABULEIRO[0][2] == TABULEIRO[1][1] == TABULEIRO[2][0]) and (TABULEIRO[0][2] is not None):
+        VENCEDOR = TABULEIRO[0][2]
+        pygame.draw.line(tela, (250, 0, 0), (50, 350), (350, 50), 4)
+
+    #checar por empate
+    list_aux = []
+    for linha in TABULEIRO:
+        #verifica se todas as linhas e todos os conteúdos dentro da linha estão preenchidos
+        linha_preenchida = all(linha)
+        list_aux.append(linha_preenchida)
+
+    if all(list_aux) and VENCEDOR is None:
+        EMPATE = True
+    else:
+        EMPATE = False
+
+    desenhar_status()
