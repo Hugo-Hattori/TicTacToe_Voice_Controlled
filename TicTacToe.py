@@ -20,7 +20,7 @@ pygame.init()
 #configurações
 fps = 30
 relogio = pygame.time.Clock()
-tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA), 0, 32)
+tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA + 100), 0, 32)
 pygame.display.set_caption('Tic Tac Toe')
 
 #carregando imagens
@@ -37,7 +37,6 @@ IMAGEM_O = pygame.transform.scale(IMAGEM_O, (80, 80))
 def desenhar_tela():
     tela.blit(IMAGEM_BACKGROUND, (0, 0))
     pygame.display.update()
-    time.sleep(3)
     tela.fill(COR_FUNDO)
 
     #desenhando linhas verticais
@@ -61,9 +60,9 @@ def desenhar_status():
 
     fonte = pygame.font.SysFont('arial', 30)
     texto = fonte.render(mensagem, 1, COR_FUNDO)
-    retangulo = ((0, 400), (500, 100)) #((left, top), (width, height))
+    retangulo = ((0, 500), (500, 100)) #((left, top), (width, height))
     tela.fill(COR_LINHA, retangulo)
-    rect_texto = texto.get_rect(center=(TELA_LARGURA/2, 450))
+    rect_texto = texto.get_rect(center=(TELA_LARGURA/2, 550))
     tela.blit(texto, rect_texto)
     pygame.display.update()
 
@@ -76,8 +75,8 @@ def checar_vitoria():
         if (TABULEIRO[linha][0] == TABULEIRO[linha][1] == TABULEIRO[linha][2]) and (TABULEIRO[linha][0] is not None):
             VENCEDOR = TABULEIRO[linha][0] #vai pegar o X ou O e idenficar ele como vencedor
             pygame.draw.line(tela, (250, 0, 0),
-                             (0, ((linha + 1) * TELA_ALTURA / 3 - TELA_ALTURA / 6)),
-                             (TELA_LARGURA, ((linha + 1 ) * TELA_ALTURA) - TELA_ALTURA / 6),
+                             (0, (linha + 1) * TELA_ALTURA / 3 - TELA_ALTURA / 6 - 3),
+                             (TELA_LARGURA, (linha + 1) * TELA_ALTURA / 3 - TELA_ALTURA / 6 - 3),
                              4)
 
     #checar vitória pelas colunas
@@ -85,19 +84,18 @@ def checar_vitoria():
         if (TABULEIRO[0][coluna] == TABULEIRO[1][coluna] == TABULEIRO[2][coluna]) and (TABULEIRO[0][coluna] is not None):
             VENCEDOR = TABULEIRO[0][coluna]
             pygame.draw.line(tela, (250, 0, 0),
-                             (0, ((coluna + 1) * TELA_LARGURA / 3 - TELA_LARGURA / 6)),
-                             (TELA_ALTURA, ((coluna + 1) * TELA_LARGURA) - TELA_LARGURA / 6),
-                             4)
+                             ((coluna + 1) * TELA_LARGURA / 3 - TELA_LARGURA / 6 - 3, 0),
+                             ((coluna + 1) * TELA_LARGURA / 3 - TELA_LARGURA / 6 - 3, TELA_ALTURA), 4)
 
 
     #checar vitória pelas diagonais
     if (TABULEIRO[0][0] == TABULEIRO[1][1] == TABULEIRO[2][2]) and (TABULEIRO[0][0] is not None):
         VENCEDOR = TABULEIRO[0][0]
-        pygame.draw.line(tela, (250, 0, 0), (50, 50), (350, 350), 4)
+        pygame.draw.line(tela, (250, 0, 0), (50, 50), (450, 450), 5)
 
     if (TABULEIRO[0][2] == TABULEIRO[1][1] == TABULEIRO[2][0]) and (TABULEIRO[0][2] is not None):
         VENCEDOR = TABULEIRO[0][2]
-        pygame.draw.line(tela, (250, 0, 0), (50, 350), (350, 50), 4)
+        pygame.draw.line(tela, (250, 0, 0), (40, 450), (440, 50), 5)
 
     #checar por empate
     EMPATE = all(all(linha) for linha in TABULEIRO) if VENCEDOR is None else False
@@ -110,8 +108,8 @@ def checar_vitoria():
 def desenhar_XO(linha, coluna):
     global TABULEIRO, JOGADOR_XO
 
-    pos_x = 30 if linha == 1 else (TELA_LARGURA/3 + 30 if linha == 2 else TELA_LARGURA/3 * 2 + 30)
-    pos_y = 30 if coluna == 1 else (TELA_ALTURA/3 + 30 if coluna == 2 else TELA_ALTURA/3 * 2 + 30)
+    pos_y = 40 if linha == 1 else (TELA_ALTURA/3 + 40 if linha == 2 else TELA_ALTURA/3 * 2 + 40)
+    pos_x = 40 if coluna == 1 else (TELA_LARGURA/3 + 40 if coluna == 2 else TELA_LARGURA/3 * 2 + 40)
 
     #substitui X ou O na matriz do TABULEIRO, de acordo com o jogador da vez e de acordo com a posição
     TABULEIRO[linha-1][coluna-1] = JOGADOR_XO
@@ -122,6 +120,7 @@ def desenhar_XO(linha, coluna):
     else:
         tela.blit(IMAGEM_O, (pos_x, pos_y))
         JOGADOR_XO = 'x' #troca de jogador
+    pygame.display.update()
 
 
 def usuario_click():
@@ -152,13 +151,14 @@ def resetar_jogo():
 
 #Iniciando o jogo e Main Loop do jogo
 desenhar_tela()
+desenhar_status()
 
 while(True):
     for evento in pygame.event.get():
         if evento.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif evento.type is MOUSEBUTTONDOWN:
+        elif evento.type == MOUSEBUTTONDOWN:
             usuario_click()
             if (VENCEDOR or EMPATE):
                 resetar_jogo()
