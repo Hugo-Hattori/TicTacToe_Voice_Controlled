@@ -117,19 +117,8 @@ def checar_vitoria():
 def desenhar_XO(linha, coluna):
     global TABULEIRO, JOGADOR_XO
 
-    if linha == 1:
-        pos_x = 30
-    if linha == 2:
-        pos_x = TELA_LARGURA/3 + 30
-    if linha == 3:
-        pos_x = TELA_LARGURA/3 * 2 + 30
-
-    if coluna == 1:
-        pos_y = 30
-    if coluna == 2:
-        pos_y = TELA_ALTURA/3 + 30
-    if coluna == 3:
-        pos_y = TELA_ALTURA/3 * 2 + 30
+    pos_x = 30 if linha == 1 else (TELA_LARGURA/3 + 30 if linha == 2 else TELA_LARGURA/3 * 2 + 30)
+    pos_y = 30 if coluna == 1 else (TELA_ALTURA/3 + 30 if coluna == 2 else TELA_ALTURA/3 * 2 + 30)
 
     #substitui X ou O na matriz do TABULEIRO, de acordo com o jogador da vez e de acordo com a posição
     TABULEIRO[linha-1][coluna-1] = JOGADOR_XO
@@ -147,24 +136,10 @@ def usuario_click():
     click_x, click_y = pygame.mouse.get_pos()
 
     #pega qual coluna foi clicado
-    if click_x < TELA_LARGURA/3:
-        coluna = 1
-    elif click_x < TELA_LARGURA/3 * 2: #tem q ser menor que esta condição, mas não menor q a condição anterior, por isso usamos elif
-        coluna = 2
-    elif click_x < TELA_LARGURA:
-        coluna = 3
-    else:
-        coluna = None
+    coluna = 1 if click_x < TELA_LARGURA/3 else (2 if click_x < TELA_LARGURA/3 * 2 else (3 if click_x < TELA_LARGURA else None))
 
     #pega qual linha foi clicado
-    if click_y < TELA_ALTURA/3:
-        linha = 1
-    elif click_y < TELA_ALTURA/3 * 2:
-        linha = 2
-    elif click_y < TELA_ALTURA:
-        linha = 3
-    else:
-        linha = None
+    linha = 1 if click_y < TELA_ALTURA/3 else (2 if click_y < TELA_ALTURA/3 * 2 else (3 if click_y < TELA_ALTURA else None))
 
     #quando tivermos a linha e a coluna do clique e a posição onde foi clicado não for nula: desenha símbolo
     if linha and coluna and TABULEIRO[linha-1][coluna-1] is None:
