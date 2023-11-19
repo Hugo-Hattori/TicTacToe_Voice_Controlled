@@ -107,8 +107,9 @@ def checar_vitoria():
         pygame.draw.line(tela, (250, 0, 0), (50, 350), (350, 50), 4)
 
     #checar por empate
-    list_aux = [all(linha) for linha in TABULEIRO] #verifica se todas as linhas e todos os conteúdos dentro da linha estão preenchidos
-    EMPATE = all(list_aux) and VENCEDOR is None #EMPATE irá receber True ou False
+    EMPATE = all(all(linha) for linha in TABULEIRO) if VENCEDOR is None else False
+    # obs1: verifica se todas as linhas e todos os conteúdos dentro da linha estão preenchidos
+    # obs2: EMPATE irá receber True ou False
 
     desenhar_status()
 
@@ -139,3 +140,34 @@ def desenhar_XO(linha, coluna):
     else:
         tela.blit(IMAGEM_O, (pos_x, pos_y))
         JOGADOR_XO = 'x' #troca de jogador
+
+
+def usuario_click():
+    #pega coordenadas do click
+    click_x, click_y = pygame.mouse.get_pos()
+
+    #pega qual coluna foi clicado
+    if click_x < TELA_LARGURA/3:
+        coluna = 1
+    elif click_x < TELA_LARGURA/3 * 2: #tem q ser menor que esta condição, mas não menor q a condição anterior, por isso usamos elif
+        coluna = 2
+    elif click_x < TELA_LARGURA:
+        coluna = 3
+    else:
+        coluna = None
+
+    #pega qual linha foi clicado
+    if click_y < TELA_ALTURA/3:
+        linha = 1
+    elif click_y < TELA_ALTURA/3 * 2:
+        linha = 2
+    elif click_y < TELA_ALTURA:
+        linha = 3
+    else:
+        linha = None
+
+    #quando tivermos a linha e a coluna do clique e a posição onde foi clicado não for nula: desenha símbolo
+    if linha and coluna and TABULEIRO[linha-1][coluna-1] is None:
+        global JOGADOR_XO
+        desenhar_XO(linha, coluna)
+        checar_vitoria()
