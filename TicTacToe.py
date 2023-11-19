@@ -158,6 +158,8 @@ def usuario_click():
                 linha = 2
             elif ('linha 3' or 'linha três') in texto_voz:
                 linha = 3
+            else:
+                linha = None
 
             if ('coluna 1' or 'coluna um') in texto_voz:
                 coluna = 1
@@ -165,6 +167,8 @@ def usuario_click():
                 coluna = 2
             elif ('coluna 3' or 'coluna três') in texto_voz:
                 coluna = 3
+            else:
+                coluna = None
         except:
             linha, coluna = None, None
             print('Estou escutando...')
@@ -206,6 +210,7 @@ while(True):
         elif speech_command == True:
             usuario_click()
             if (VENCEDOR or EMPATE):
-                resetar_jogo()
+                pygame.quit()
+                sys.exit()
         pygame.display.update()
         relogio.tick(fps)
