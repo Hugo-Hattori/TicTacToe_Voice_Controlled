@@ -42,7 +42,6 @@ IMAGEM_O = pygame.transform.scale(IMAGEM_O, (80, 80))
 
 
 def desenhar_tela():
-
     tela.blit(IMAGEM_BACKGROUND, (0, 0))
     pygame.display.update()
     time.sleep(3)
@@ -108,15 +107,35 @@ def checar_vitoria():
         pygame.draw.line(tela, (250, 0, 0), (50, 350), (350, 50), 4)
 
     #checar por empate
-    list_aux = []
-    for linha in TABULEIRO:
-        #verifica se todas as linhas e todos os conteúdos dentro da linha estão preenchidos
-        linha_preenchida = all(linha)
-        list_aux.append(linha_preenchida)
-
-    if all(list_aux) and VENCEDOR is None:
-        EMPATE = True
-    else:
-        EMPATE = False
+    list_aux = [all(linha) for linha in TABULEIRO] #verifica se todas as linhas e todos os conteúdos dentro da linha estão preenchidos
+    EMPATE = all(list_aux) and VENCEDOR is None #EMPATE irá receber True ou False
 
     desenhar_status()
+
+
+def desenhar_XO(linha, coluna):
+    global TABULEIRO, JOGADOR_XO
+
+    if linha == 1:
+        pos_x = 30
+    if linha == 2:
+        pos_x = TELA_LARGURA/3 + 30
+    if linha == 3:
+        pos_x = TELA_LARGURA/3 * 2 + 30
+
+    if coluna == 1:
+        pos_y = 30
+    if coluna == 2:
+        pos_y = TELA_ALTURA/3 + 30
+    if coluna == 3:
+        pos_y = TELA_ALTURA/3 * 2 + 30
+
+    #substitui X ou O na matriz do TABULEIRO, de acordo com o jogador da vez e de acordo com a posição
+    TABULEIRO[linha-1][coluna-1] = JOGADOR_XO
+
+    if JOGADOR_XO == 'x':
+        tela.blit(IMAGEM_X, (pos_x, pos_y))
+        JOGADOR_XO = 'o' #troca de jogador
+    else:
+        tela.blit(IMAGEM_O, (pos_x, pos_y))
+        JOGADOR_XO = 'x' #troca de jogador
