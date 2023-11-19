@@ -6,14 +6,7 @@ import os
 
 
 #variáveis globais
-JOGADOR_XO = 'x'
-
-VENCEDOR = None
-
-EMPATE = None
-
-TELA_LARGURA = 500
-TELA_ALTURA = 500
+JOGADOR_XO, VENCEDOR, EMPATE, TELA_LARGURA, TELA_ALTURA = 'x', None, False, 500, 500
 
 COR_FUNDO = (255, 255, 255) #cor padrão da janela
 
@@ -31,7 +24,7 @@ tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA), 0, 32)
 pygame.display.set_caption('Tic Tac Toe')
 
 #carregando imagens
-IMAGEM_BACKGROUND = pygame.image.load((os.path.join('imgs', 'malha3x3.png')))
+IMAGEM_BACKGROUND = pygame.image.load((os.path.join('imgs', 'white_square.png')))
 IMAGEM_X = pygame.image.load((os.path.join('imgs', 'simbolo-x.png')))
 IMAGEM_O = pygame.image.load((os.path.join('imgs', 'simbolo-o.png')))
 
@@ -146,3 +139,28 @@ def usuario_click():
         global JOGADOR_XO
         desenhar_XO(linha, coluna)
         checar_vitoria()
+
+
+def resetar_jogo():
+    global JOGADOR_XO, VENCEDOR, EMPATE, TABULEIRO
+
+    time.sleep(3)
+    JOGADOR_XO, EMPATE, VENCEDOR = 'x', False, None
+    desenhar_tela()
+    TABULEIRO = [[None]*3, [None]*3, [None]*3]
+
+
+#Iniciando o jogo e Main Loop do jogo
+desenhar_tela()
+
+while(True):
+    for evento in pygame.event.get():
+        if evento.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        elif evento.type is MOUSEBUTTONDOWN:
+            usuario_click()
+            if (VENCEDOR or EMPATE):
+                resetar_jogo()
+        pygame.display.update()
+        relogio.tick(fps)
