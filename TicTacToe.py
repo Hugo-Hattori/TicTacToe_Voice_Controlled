@@ -3,7 +3,11 @@ import sys
 import time
 from pygame.locals import *
 import os
+import speech_recognition as sr
 
+
+#variável controle
+speech_command = True
 
 #variáveis globais
 JOGADOR_XO, VENCEDOR, EMPATE, TELA_LARGURA, TELA_ALTURA = 'x', None, False, 500, 500
@@ -22,6 +26,7 @@ fps = 30
 relogio = pygame.time.Clock()
 tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA + 100), 0, 32)
 pygame.display.set_caption('Tic Tac Toe')
+rec = sr.Recognizer()
 
 #carregando imagens
 IMAGEM_BACKGROUND = pygame.image.load((os.path.join('imgs', 'white_square.png')))
@@ -125,19 +130,53 @@ def desenhar_XO(linha, coluna):
 
 def usuario_click():
     #pega coordenadas do click
-    click_x, click_y = pygame.mouse.get_pos()
+    if speech_command == False:
+        click_x, click_y = pygame.mouse.get_pos()
 
-    #pega qual coluna foi clicado
-    coluna = 1 if click_x < TELA_LARGURA/3 else (2 if click_x < TELA_LARGURA/3 * 2 else (3 if click_x < TELA_LARGURA else None))
+        # pega qual coluna foi clicado
+        coluna = 1 if click_x < TELA_LARGURA / 3 else (
+            2 if click_x < TELA_LARGURA / 3 * 2 else (3 if click_x < TELA_LARGURA else None))
 
-    #pega qual linha foi clicado
-    linha = 1 if click_y < TELA_ALTURA/3 else (2 if click_y < TELA_ALTURA/3 * 2 else (3 if click_y < TELA_ALTURA else None))
+        # pega qual linha foi clicado
+        linha = 1 if click_y < TELA_ALTURA / 3 else (
+            2 if click_y < TELA_ALTURA / 3 * 2 else (3 if click_y < TELA_ALTURA else None))
+
+    #controle por voz (Speech Recognition)
+    if speech_command == True:
+        with sr.Microphone(device_index=1) as microfone:
+            rec.adjust_for_ambient_noise(microfone)
+            print('Pode começar a falar:')
+            audio = rec.listen(microfone)
+            rec.pause_threshold = 0.5
+        try:
+            # reconhece o audio e traduz para texto
+            texto_voz = rec.recognize_google(audio, language='pt-BR')
+            texto_voz = str(texto_voz).casefold()
+            if ('linha 1' or 'linha um') in texto_voz:
+                linha = 1
+            elif ('linha 2' or 'linha dois') in texto_voz:
+                linha = 2
+            elif ('linha 3' or 'linha três') in texto_voz:
+                linha = 3
+
+            if ('coluna 1' or 'coluna um') in texto_voz:
+                coluna = 1
+            elif ('coluna 2' or 'coluna dois') in texto_voz:
+                coluna = 2
+            elif ('coluna 3' or 'coluna três') in texto_voz:
+                coluna = 3
+        except:
+            linha, coluna = None, None
+            print('Estou escutando...')
+
 
     #quando tivermos a linha e a coluna do clique e a posição onde foi clicado não for nula: desenha símbolo
     if linha and coluna and TABULEIRO[linha-1][coluna-1] is None:
         global JOGADOR_XO
         desenhar_XO(linha, coluna)
         checar_vitoria()
+    else:
+        usuario_click()
 
 
 def resetar_jogo():
@@ -147,6 +186,7 @@ def resetar_jogo():
     JOGADOR_XO, EMPATE, VENCEDOR = 'x', False, None
     desenhar_tela()
     TABULEIRO = [[None]*3, [None]*3, [None]*3]
+    desenhar_status()
 
 
 #Iniciando o jogo e Main Loop do jogo
@@ -158,7 +198,12 @@ while(True):
         if evento.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif evento.type == MOUSEBUTTONDOWN:
+        if speech_command == False:
+            if evento.type == MOUSEBUTTONDOWN:
+                usuario_click()
+                if (VENCEDOR or EMPATE):
+                    resetar_jogo()
+        elif speech_command == True:
             usuario_click()
             if (VENCEDOR or EMPATE):
                 resetar_jogo()
