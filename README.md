@@ -16,6 +16,10 @@ application as well as Pygame application.</p>
 to create Classes.</p>
 
 
+|![img_5.png](img_5.png) | ![img_1.png](img_1.png) |
+|![img_2.png](img_2.png) | ![img_3.png](img_3.png) |
+
+
 ### Global Variables
 
 + "speech_command" is the control variable that enables Speech Command feature;
@@ -46,13 +50,3 @@ on the screen or if the player uses a speech command;
 both parameters to "desenhar_XO" function;
 + "resetar_jogo" resets the "JOGADOR_XO", "VENCEDOR", "EMPATE" and the "TABULEIRO" varaibles
 then it redraws the screen.
-
-
-#### Game Display
-![img.png](img.png) | ![img_5.png](img_5.png)
-
-### Displaying Winner
-![img_1.png](img_1.png) | ![img_2.png](img_2.png) | ![img_4.png](img_4.png)
-
-### Draw
-![img_3.png](img_3.png)
