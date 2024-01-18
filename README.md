@@ -16,9 +16,9 @@ application as well as Pygame application.</p>
 to create Classes.</p>
 
 
-| ![img_5.png](img_5.png) | ![img_1.png](img_1.png) |
-|-------------------------|-------------------------|
-| ![img_2.png](img_2.png) | ![img_3.png](img_3.png) |
+| ![img_5.png](imgs/img_5.png) | ![img_1.png](imgs/img_1.png) |
+|------------------------------|------------------------------|
+| ![img_2.png](imgs/img_2.png) | ![img_3.png](imgs/img_3.png) |
 
 
 ### Global Variables
