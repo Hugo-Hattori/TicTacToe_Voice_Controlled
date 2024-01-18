@@ -7,7 +7,7 @@ import speech_recognition as sr
 
 
 #variável controle
-speech_command = True
+speech_command = False
 
 #variáveis globais
 JOGADOR_XO, VENCEDOR, EMPATE, TELA_LARGURA, TELA_ALTURA = 'x', None, False, 500, 500
